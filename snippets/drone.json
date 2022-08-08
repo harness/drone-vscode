@@ -1,0 +1,29 @@
+{
+  "Drone Pipeline": {
+    "prefix": "drone pipeline",
+    "description": "Defines a drone pipeline",
+    "body": [
+      "kind: pipeline",
+      "type: docker",
+      "name: ${1:my-pipeline}",
+      "platform:",
+      "  os: ${2|linux,darwin,windows|}",
+      "  arch: ${3|amd64,arm64|}",
+      "steps:",
+      "- name: ${4:step-1}",
+      "  image: ${5:busybox}",
+      "  commands:",
+      "  - echo 'Hello World'"
+    ]
+  },
+  "Drone Pipeline Step": {
+    "prefix": "drone step",
+    "description": "Defines a drone pipeline step",
+    "body": [
+      " - name: ${1:my-step}",
+      "   image: ${2:busybox}",
+      "   commands:",
+      "    - echo 'Hello World'"
+    ]
+  }
+}

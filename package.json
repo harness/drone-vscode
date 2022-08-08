@@ -1,0 +1,266 @@
+{
+  "name": "vscode-drone",
+  "displayName": "vscode-drone",
+  "description": "VsCode plugin for Drone",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.68.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kameshsampath/vscode-drone.git"
+  },
+  "author": "Kamesh Sampath<kamesh.sampath@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kameshsampath/vscode-drone/issues"
+  },
+  "homepage": "https://github.com/kameshsampath/vscode-drone#readme",
+  "categories": [
+    "Other",
+    "Snippets"
+  ],
+  "icon": "images/drone-logo-png-dark-128.png",
+  "keywords": [
+    "Pipelines",
+    "Drone"
+  ],
+  "activationEvents": [
+    "onCommand:vscode-drone.run",
+    "onCommand:vscode-drone.about",
+    "onCommand:vscode-drone.addDroneToPath",
+    "onLanguage:drone",
+    "workspaceContains:**/.drone.yml"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-drone.about",
+        "title": "About Drone",
+        "category": "Drone",
+        "icon": "$(versions)"
+      },
+      {
+        "command": "vscode-drone.run",
+        "title": "Run Pipeline",
+        "category": "Drone",
+        "icon": "$(play)"
+      },
+      {
+        "command": "vscode-drone.addDroneToPath",
+        "title": "Add 'drone' cli to 'PATH'",
+        "category": "Drone"
+      },
+      {
+        "command": "vscode-drone.runStep",
+        "title": "Run Pipeline Step",
+        "category": "Drone",
+        "enablement": "resourceFilename == '.drone.yml' &&  editorHasSelection"
+      },
+      {
+        "command": "vscode-drone.runSteps",
+        "title": "Run Pipeline Steps",
+        "category": "Drone",
+        "enablement": "resourceFilename == '.drone.yml'",
+        "icon": "$(list-tree)"
+      }
+    ],
+    "languages": [
+      {
+        "id": "drone",
+        "aliases": [
+          "Drone Pipeline"
+        ],
+        "extensions": [
+          ".drone.yml"
+        ],
+        "configuration": "./drone-language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "drone",
+        "scopeName": "source.drone",
+        "path": "./syntaxes/YAML.tmLanguage"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceFilename == '.drone.yml'",
+          "group": "navigation",
+          "command": "vscode-drone.run"
+        },
+        {
+          "when": "resourceFilename == '.drone.yml'",
+          "group": "navigation",
+          "command": "vscode-drone.runSteps"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceFilename == '.drone.yml'",
+          "group": "drone",
+          "command": "vscode-drone.run"
+        },
+        {
+          "when": "resourceFilename == '.drone.yml'",
+          "group": "drone",
+          "command": "vscode-drone.runSteps"
+        },
+        {
+          "when": "resourceFilename == '.drone.yml' && editorHasSelection",
+          "group": "drone",
+          "command": "vscode-drone.runStep"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Drone",
+      "properties": {
+        "vscode-drone.drone.checkUpgrade": {
+          "title": "Check for drone cli upgrade",
+          "type": "boolean",
+          "scope": "machine",
+          "default": true,
+          "description": "Notify on startup if update is available for drone cli",
+          "order": 0
+        },
+        "vscode-drone.runOnGitCommit": {
+          "Title": "Run on git commit",
+          "type": "boolean",
+          "default": false,
+          "scope": "machine-overridable",
+          "markdownDescription": "Run `drone exec` on every commit of the code",
+          "order": 1
+        },
+        "vscode-drone.runTrusted": {
+          "Title": "Run drone in trusted mode",
+          "type": "boolean",
+          "default": false,
+          "scope": "machine-overridable",
+          "markdownDescription": "Run `drone exec --trusted ` mode, allowing to mount host paths.",
+          "order": 2
+        },
+        "vscode-drone.execEnvironment": {
+          "Title": "Execution Environment Variables",
+          "type": "object",
+          "default": {},
+          "markdownDescription": "The environment variables that will be passed to `drone exec` as `--env-file` option. The values are passed as key pairs e.g. \"FOO\": \"BAR\"",
+          "order": 3
+        },
+        "vscode-drone.showChannelOutput": {
+          "title": "Show channel on output",
+          "type": "boolean",
+          "default": false,
+          "description": "Show Drone output channel when new text added to output stream",
+          "order": 4
+        },
+        "vscode-drone.drone.cli.path": {
+          "type": "string",
+          "title": "Path to drone cli",
+          "default": "",
+          "scope": "window",
+          "description": "File path to a drone cli binary. (You can override this on a per-OS basis if required).",
+          "order": 4
+        },
+        "vscode-drone.drone.cli.path.mac": {
+          "type": "string",
+          "scope": "machine",
+          "default": "",
+          "title": "Path to drone cli(macOS)",
+          "description": "File path to a drone cli binary.",
+          "order": 5
+        },
+        "vscode-drone.drone.cli.path.windows": {
+          "type": "string",
+          "scope": "machine",
+          "default": "",
+          "title": "Path to drone cli(Windows)",
+          "description": "File path to a drone cli binary.",
+          "order": 6
+        },
+        "vscode-drone.drone.cli.path.linux": {
+          "type": "string",
+          "scope": "machine",
+          "default": "",
+          "title": "Path to drone cli(Linux)",
+          "description": "File path to a drone cli binary.",
+          "order": 7
+        }
+      }
+    },
+    "snippets": [
+      {
+        "language": "yaml",
+        "path": "./snippets/drone.json"
+      }
+    ]
+  },
+  "extensionDependencies": [
+    "redhat.vscode-yaml",
+    "vscode.git"
+  ],
+  "scripts": {
+    "clean": "rimraf out",
+    "compile": "webpack",
+    "compile-tests": "tsc -p . --outDir out",
+    "lint": "eslint src --ext ts",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "test": "node ./out/test/runTest.js",
+    "vscode:prepublish": "npm run clean && npm run package",
+    "watch": "webpack --watch",
+    "watch-tests": "tsc -p . -w --outDir out"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/fs-extra": "^9.0.13",
+    "@types/glob": "^7.2.0",
+    "@types/js-yaml": "^4.0.5",
+    "@types/lodash": "^4.14.182",
+    "@types/mocha": "^9.1.1",
+    "@types/moment": "^2.13.0",
+    "@types/mustache": "^4.1.3",
+    "@types/node": "16.x",
+    "@types/semver": "^7.3.10",
+    "@types/shelljs": "^0.8.11",
+    "@types/targz": "^1.0.1",
+    "@types/unzip-stream": "^0.3.1",
+    "@types/vscode": "^1.68.0",
+    "@types/yaml": "^1.9.7",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "@vscode/test-electron": "^2.1.3",
+    "eslint": "^8.18.0",
+    "eslint-plugin-header": "^3.1.1",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.7.4",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "fs-extra": "^10.1.0",
+    "hasha": "^5.2.2",
+    "install": "^0.13.0",
+    "js-yaml": "^4.1.0",
+    "jstream": "^1.1.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.3",
+    "mustache": "^4.2.0",
+    "octokit": "^1.8.0",
+    "request": "^2.88.2",
+    "request-progress": "^3.0.0",
+    "semver": "^7.3.7",
+    "shelljs": "^0.8.5",
+    "targz": "^1.0.1",
+    "unzip-stream": "^0.3.1",
+    "yaml": "^2.1.1"
+  }
+}
